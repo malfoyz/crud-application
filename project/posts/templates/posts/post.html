@@ -1,0 +1,70 @@
+{% extends 'posts/base.html' %}
+{% load bootstrap5 %}
+
+
+{% block content %}
+
+<div class="row mx-4 my-3">
+    <div class="col">
+      <img src="{{ post.image.url }}" class="rounded img-fluid" alt="...">
+    </div>
+    <div class="col">
+      <div class="text-center align-self-start">
+        <h1 class="display-6">{{ post.name }}</h1>
+      </div>
+      <div class="d-flex">
+        <p class="text-dark">Категория:&nbsp;</p>
+        <p class="text-primary">{{ post.category.name }}</p>
+      </div>
+      <div class="d-flex">
+        <p class="text-dark">Теги:&nbsp;</p>
+        <p class="text-secondary">
+        {% for tag in post.tag.all %}
+          #{{ tag }}
+        {% endfor %}
+        </p>
+      </div>
+      <p class="text-dark">Автор: {{ post.author.last_name }} {{ post.author.first_name }}</p>
+      <p class="text-dark">Обновлено {{ post.updated_at }}</p>
+      {% if user.pk == post.author.pk or user.is_superuser %}
+      <div class="d-flex">
+        <a href="{% url 'posts:edit_post' post.pk %}" class="btn btn-warning">Изменить</a>
+        <a href="{% url 'posts:delete_post' post.pk %}" class="btn btn-danger">Удалить</a>
+      </div>
+      {% endif %}
+    </div>
+</div>
+<p class="text-dart mb-5">{{ post.content }}</p>
+<div class="row border-top border-dark p-3">
+  <h5 class="text-center">Комментарии</h5>
+  <form method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons submit='Оставить комментарий' %}{% endbuttons %}
+  </form>
+  <ul class="list-group">
+  {% for comment in comments %}
+    <li class="list-group-item">
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">
+        {% if comment.user.is_superuser %}
+          Админ
+        {% else %}
+          {{ comment.user.last_name }} {{ comment.user.first_name }}
+        {% endif %}
+        </h5>
+        <small>{{ comment.created_at }}</small>
+      </div>
+      <p class="mb-1">{{ comment.text }}</p>
+      {% if user.pk == comment.user.pk or user.is_superuser %}
+      <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-secondary btn-sm mr-2">Редактировать</button>
+        <button type="button" class="btn btn-danger btn-sm">Удалить</button>
+      </div>
+      {% endif %}
+    </li>
+  {% endfor %}
+  </ul>
+</div>
+
+{% endblock content %}

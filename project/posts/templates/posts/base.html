@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <title>{{ title }}</title>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="{% url 'posts:home' %}">Blog</a>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                  <li class="nav-item">
+                    <a href="{% url 'posts:home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Посты</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'posts:get_categories' %}" class="nav-link {% if request.resolver_match.url_name == 'get_categories' %}active{% endif %}">Категории</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Теги</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="ml-auto">
+                <p class="text-white m-0">
+                  {% if user.is_authenticated %}
+                    Пользователь: {{ user.username }}
+                  {% else %}
+                    Гость
+                  {% endif %}
+                </p>
+              </div>
+            </div>
+          </nav>
+    </header>
+    <section class="vh-100">
+        <div class="row vh-100">
+            <div class="col col-lg-2 bg-light border border-dark p-0">
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item">
+                    {% if cat_id == 0 %}
+                      <a class="nav-link active bg-secondary">Все</a>
+                    {% else %}
+                      <a class="nav-link text-dark" href="{% url 'posts:home' %}">Все</a>
+                    {% endif %}
+                    </li>
+                  {% for category in categories %}
+                    <li class="nav-item">
+                    {% if cat_id == category.pk %}
+                      <a class="nav-link active bg-secondary">{{ category.name }}</a>
+                    {% else %}
+                      <a class="nav-link text-dark" href="{% url 'posts:home' %}?category={{ category.pk }}">{{ category.name }}</a>
+                    {% endif %}
+                    </li>
+                  {% endfor %}
+                </ul>
+            </div>
+            <div class="col p-0 my-3 mx-3">
+              <div class="text-center">
+                <h1 class="display-6">{{ title }}</h1>
+              </div>
+              {% block content %}
+
+              {% endblock %}
+            </div>
+        </div>
+    </section>
+</body>
+</html>
