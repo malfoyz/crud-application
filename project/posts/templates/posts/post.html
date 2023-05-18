@@ -19,17 +19,17 @@
       <div class="d-flex">
         <p class="text-dark">Теги:&nbsp;</p>
         <p class="text-secondary">
-        {% for tag in post.tag.all %}
+        {% for tag in post.tags %}
           #{{ tag }}
         {% endfor %}
         </p>
       </div>
       <p class="text-dark">Автор: {{ post.author.last_name }} {{ post.author.first_name }}</p>
       <p class="text-dark">Обновлено {{ post.updated_at }}</p>
-      {% if user.pk == post.author.pk or user.is_superuser %}
+      {% if user.pk == post.author.id or user.is_superuser %}
       <div class="d-flex">
-        <a href="{% url 'posts:edit_post' post.pk %}" class="btn btn-warning">Изменить</a>
-        <a href="{% url 'posts:delete_post' post.pk %}" class="btn btn-danger">Удалить</a>
+        <a href="{% url 'posts:edit_post' post.id %}" class="btn btn-warning">Изменить</a>
+        <a href="{% url 'posts:delete_post' post.id %}" class="btn btn-danger">Удалить</a>
       </div>
       {% endif %}
     </div>
@@ -37,11 +37,13 @@
 <p class="text-dart mb-5">{{ post.content }}</p>
 <div class="row border-top border-dark p-3">
   <h5 class="text-center">Комментарии</h5>
+  {% if user.is_authenticated %}
   <form method="post">
     {% csrf_token %}
     {% bootstrap_form form %}
     {% buttons submit='Оставить комментарий' %}{% endbuttons %}
   </form>
+  {% endif %}
   <ul class="list-group">
   {% for comment in comments %}
     <li class="list-group-item">
@@ -56,7 +58,7 @@
         <small>{{ comment.created_at }}</small>
       </div>
       <p class="mb-1">{{ comment.text }}</p>
-      {% if user.pk == comment.user.pk or user.is_superuser %}
+      {% if user.pk == comment.user.id or user.is_superuser %}
       <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-secondary btn-sm mr-2">Редактировать</button>
         <button type="button" class="btn btn-danger btn-sm">Удалить</button>

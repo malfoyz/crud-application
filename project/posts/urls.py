@@ -1,6 +1,9 @@
 from django.urls import path
 
-from .views import *
+from .views import (
+    create_category, create_post, delete_category, delete_post,
+    edit_category, edit_post, get_categories, get_post, index,
+)
 
 
 app_name = 'posts'

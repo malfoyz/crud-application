@@ -8,14 +8,14 @@
     {% for post in posts %}
     <div class="col h-100">
         <div class="card ">
-            <a href="{{ post.get_absolute_url }}" style="text-decoration: none; color: inherit;">
+            <a href="{% url 'posts:get_post' post.id %}" style="text-decoration: none; color: inherit;">
                 <img src="{{ post.image.url }}" class="card-img-top" alt="...">
                 <div class="card-body mt-auto">
                     <h5 class="card-title">{{ post.name }}</h5>
                     <p class="card-text">{{ post.content }}</p>
                     <p class="text-primary m-0">{{ post.category.name }}</p>
                     <p class="text-secondary m-0">
-                    {% for tag in post.tag.all %}
+                    {% for tag in post.tags %}
                         #{{ tag.name }}
                     {% endfor %}
                     </p>
