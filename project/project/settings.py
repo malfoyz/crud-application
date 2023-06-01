@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap5',
     'debug_toolbar',
+    'rest_framework',
+    'drf_yasg',
 
     # my apps
     'posts.apps.PostsConfig',
